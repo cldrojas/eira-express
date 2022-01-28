@@ -17,8 +17,14 @@ class Service {
       { id: 4, title: 'Hello world', category: 'test', content: 'edit this' },
     ];
   }
+
   create(entry) {
-    entry ? this.entries.push(entry) : null;
+    const Entry = {
+      id: this.entries.length + 1,
+      ...entry,
+    };
+    this.entries.push(Entry);
+    return Entry;
   }
 
   getAll(category) {
@@ -29,6 +35,25 @@ class Service {
 
   getById(id) {
     return this.entries.find((entry) => entry.id === id);
+  }
+
+  update(id, changes) {
+    const index = this.entries.findIndex((entry) => entry.id === id);
+    if (index === -1) {
+      throw new Error('Entry not found');
+    }
+    const entry = this.entries[index];
+    this.entries[index] = { ...entry, ...changes };
+    return this.entries[index];
+  }
+
+  delete(id) {
+    const index = this.entries.findIndex((entry) => entry.id === id);
+    if (index === -1) {
+      throw new Error('Entry not found');
+    }
+    this.entries.splice(index, 1);
+    return { message: 'Deleted', id };
   }
 }
 
