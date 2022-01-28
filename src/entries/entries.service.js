@@ -18,7 +18,7 @@ class Service {
     ];
   }
 
-  create(entry) {
+  async create(entry) {
     const Entry = {
       id: this.entries.length + 1,
       ...entry,
@@ -27,27 +27,42 @@ class Service {
     return Entry;
   }
 
-  getAll(category) {
-    return category
-      ? this.entries.filter((entry) => entry.category === category)
-      : this.entries;
+  async getAll(category) {
+    if (this.entries.length === 0) {
+      throw new Error('No entries found');
+    }
+    if (category) {
+      const filtered = this.entries.filter(
+        (entry) => entry.category === category
+      );
+      if (filtered.length === 0) {
+        throw new Error('No entries found');
+      }
+      return filtered;
+    } else {
+      return this.entries;
+    }
   }
 
-  getById(id) {
-    return this.entries.find((entry) => entry.id === id);
+  async getById(id) {
+    const entry = this.entries.find((entry) => entry.id === id);
+    if (entry === undefined) {
+      throw new Error('Entry not found');
+    }
+    return entry;
   }
 
-  update(id, changes) {
+  async update(id, changes) {
     const index = this.entries.findIndex((entry) => entry.id === id);
     if (index === -1) {
       throw new Error('Entry not found');
     }
     const entry = this.entries[index];
     this.entries[index] = { ...entry, ...changes };
-    return this.entries[index];
+    return { message: 'Updated', ...index };
   }
 
-  delete(id) {
+  async delete(id) {
     const index = this.entries.findIndex((entry) => entry.id === id);
     if (index === -1) {
       throw new Error('Entry not found');
