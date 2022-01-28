@@ -15,7 +15,9 @@ router.get('/:id', (req, res) => {
   const { id } = req.params;
   const entry = service.getById(parseInt(id));
 
-  res.status(200).json(entry);
+  entry
+    ? res.status(200).json(entry)
+    : res.status(404).json({ message: 'Entry not found' });
 });
 
 router.post('/', (req, res) => {
@@ -28,7 +30,6 @@ router.patch('/:id', (req, res) => {
   const { id } = req.params;
   const body = req.body;
   const Entry = service.update(parseInt(id), body);
-
   res.status(200).json(Entry);
 });
 
