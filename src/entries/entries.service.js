@@ -1,3 +1,5 @@
+const boom = require('@hapi/boom');
+
 class Service {
   constructor() {
     this.entries = [
@@ -29,14 +31,14 @@ class Service {
 
   async getAll(category) {
     if (this.entries.length === 0) {
-      throw new Error('No entries found');
+      throw boom.notFound('No entries found');
     }
     if (category) {
       const filtered = this.entries.filter(
         (entry) => entry.category === category
       );
       if (filtered.length === 0) {
-        throw new Error('No entries found');
+        throw boom.notFound('No entries found with that category');
       }
       return filtered;
     } else {
@@ -47,7 +49,7 @@ class Service {
   async getById(id) {
     const entry = this.entries.find((entry) => entry.id === id);
     if (entry === undefined) {
-      throw new Error('Entry not found');
+      throw boom.notFound('Entry not found');
     }
     return entry;
   }
@@ -55,7 +57,7 @@ class Service {
   async update(id, changes) {
     const index = this.entries.findIndex((entry) => entry.id === id);
     if (index === -1) {
-      throw new Error('Entry not found');
+      throw boom.notFound('Entry not found');
     }
     const entry = this.entries[index];
     this.entries[index] = { ...entry, ...changes };
@@ -65,7 +67,7 @@ class Service {
   async delete(id) {
     const index = this.entries.findIndex((entry) => entry.id === id);
     if (index === -1) {
-      throw new Error('Entry not found');
+      throw boom.notFound('Entry not found');
     }
     this.entries.splice(index, 1);
     return { message: 'Deleted', id };
