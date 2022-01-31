@@ -1,5 +1,5 @@
 const express = require('express');
-const entriesRouter = require('./entries/entries.router');
+const entriesRouter = require('./routes/entries/entries.router');
 
 const Router = (app) => {
   const router = express.Router();

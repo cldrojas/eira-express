@@ -1,7 +1,7 @@
 const express = require('express');
 
 const Service = require('./entries.service');
-const validate = require('../middlewares/validate');
+const validate = require('../../middlewares/validate');
 const { createEntry, updateEntry, getEntry } = require('./dto/entries.dto');
 
 const router = express.Router();
