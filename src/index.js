@@ -5,10 +5,14 @@ const {
 } = require('./middlewares/error');
 
 const express = require('express');
-const Router = require('./router');
+const cors = require('cors');
 const app = express();
 
+const Router = require('./router');
+const corsOptions = require('./config/cors');
+
 app.use(express.json());
+app.use(cors(corsOptions));
 
 app.get('/', (req, res) => {
   res.send('Eira api using express');
@@ -20,4 +24,4 @@ app.use(logErrors);
 app.use(boomErrorHandler);
 app.use(errorHandler);
 
-app.listen(3000);
+app.listen(process.env.PORT || 3000);
