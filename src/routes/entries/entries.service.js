@@ -1,24 +1,9 @@
 const boom = require('@hapi/boom');
 
+const getConnection = require('../../libs/postgres');
+
 class Service {
-  constructor() {
-    this.entries = [
-      { id: 1, title: 'Hello world', category: 'test', content: 'first entry' },
-      {
-        id: 2,
-        title: 'Hello world',
-        category: 'test',
-        content: 'second entry',
-      },
-      {
-        id: 3,
-        title: 'Hello world',
-        category: 'tested',
-        content: 'third entry',
-      },
-      { id: 4, title: 'Hello world', category: 'test', content: 'edit this' },
-    ];
-  }
+  constructor() {}
 
   async create(entry) {
     const Entry = {
@@ -30,19 +15,20 @@ class Service {
   }
 
   async getAll(category) {
-    if (this.entries.length === 0) {
+    const client = await getConnection();
+    const res = await client.query('SELECT * FROM entries');
+    const entries = res.rows;
+    if (entries.length === 0) {
       throw boom.notFound('No entries found');
     }
     if (category) {
-      const filtered = this.entries.filter(
-        (entry) => entry.category === category
-      );
+      const filtered = entries.filter((entry) => entry.category === category);
       if (filtered.length === 0) {
         throw boom.notFound('No entries found with that category');
       }
       return filtered;
     } else {
-      return this.entries;
+      return entries;
     }
   }
 
