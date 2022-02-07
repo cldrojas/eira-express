@@ -7,6 +7,7 @@ const {
 const express = require('express');
 const cors = require('cors');
 const app = express();
+const port = process.env.PORT || 3000;
 
 const Router = require('./router');
 const corsOptions = require('./config/cors');
@@ -24,4 +25,6 @@ app.use(logErrors);
 app.use(boomErrorHandler);
 app.use(errorHandler);
 
-app.listen(process.env.PORT || 3000);
+app.listen(port, () => {
+  console.log('listening on port', port);
+});
