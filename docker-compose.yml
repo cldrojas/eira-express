@@ -4,9 +4,9 @@ services:
   postgres:
     image: postgres:13
     environment:
-      POSTGRES_USER: cldrojas
-      POSTGRES_PASSWORD: 123pollo
-      POSTGRES_DB: eira
+      - POSTGRES_DB=eira
+      - POSTGRES_USER=cldrojas
+      - POSTGRES_PASSWORD=admin123
     ports:
       - 5432:5432
     volumes:
@@ -15,7 +15,7 @@ services:
   pgadmin:
     image: dpage/pgadmin4
     environment:
-      - PGADMIN_DEFAULT_EMAIL=cld.rojas@gmail.com
-      - PGADMIN_DEFAULT_PASSWORD=123pollo
+      - PGADMIN_DEFAULT_EMAIL=cld.rojasz@gmail.com
+      - PGADMIN_DEFAULT_PASSWORD=admin
     ports:
       - 5050:80
