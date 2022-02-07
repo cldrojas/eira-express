@@ -1,16 +1,10 @@
-const { Client } = require('pg');
+const { Pool } = require('pg');
+const config = require('../config/config');
 
-const getConnection = async () => {
-  const client = new Client({
-    host: 'localhost',
-    database: 'eira',
-    user: 'cldrojas',
-    password: '123pollo',
-    port: 5432,
-  });
+const user = encodeURIComponent(config.dbUser);
+const password = encodeURIComponent(config.dbPassword);
+const uri = `postgres://${user}:${password}@${config.dbHost}:${config.dbPort}/${config.dbName}`;
 
-  client.connect();
-  return client;
-};
+const pool = new Pool({ connectionString: uri });
 
-module.exports = getConnection;
+module.exports = pool;
