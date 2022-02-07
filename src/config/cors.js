@@ -1,5 +1,5 @@
 const whitelist = [
-  'http://152.173.209.133:5000',
+  'http://localhost:5000',
   'https://eira.com',
   'https://cldrojas.github.io/eira',
 ];

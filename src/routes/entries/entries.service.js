@@ -1,6 +1,6 @@
 const boom = require('@hapi/boom');
 
-const sequelize = require('../../libs/sequelize');
+const { models } = require('../../libs/sequelize');
 
 class Service {
   constructor() {}
@@ -15,9 +15,7 @@ class Service {
   }
 
   async getAll(category) {
-    const query = 'SELECT * FROM entries';
-    const [data] = await sequelize.query(query);
-    const entries = data;
+    const entries = await models.Entry.findAll();
 
     if (entries.length === 0) {
       throw boom.notFound('No entries found');
