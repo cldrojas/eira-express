@@ -1,6 +1,6 @@
 const boom = require('@hapi/boom');
 
-const getConnection = require('../../libs/postgres');
+const sequelize = require('../../libs/sequelize');
 
 class Service {
   constructor() {}
@@ -15,12 +15,14 @@ class Service {
   }
 
   async getAll(category) {
-    const client = await getConnection();
-    const res = await client.query('SELECT * FROM entries');
-    const entries = res.rows;
+    const query = 'SELECT * FROM entries';
+    const [data] = await sequelize.query(query);
+    const entries = data;
+
     if (entries.length === 0) {
       throw boom.notFound('No entries found');
     }
+
     if (category) {
       const filtered = entries.filter((entry) => entry.category === category);
       if (filtered.length === 0) {
@@ -33,7 +35,9 @@ class Service {
   }
 
   async getById(id) {
-    const entry = this.entries.find((entry) => entry.id === id);
+    const query = `SELECT * FROM entries WHERE id = ${id}`;
+    const res = await this.pool.query(query);
+    const entry = res.rows;
     if (entry === undefined) {
       throw boom.notFound('Entry not found');
     }
