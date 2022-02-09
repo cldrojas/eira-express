@@ -6,11 +6,7 @@ class Service {
   constructor() {}
 
   async create(entry) {
-    const Entry = {
-      id: this.entries.length + 1,
-      ...entry,
-    };
-    this.entries.push(Entry);
+    const Entry = await models.Entry.create(entry);
     return Entry;
   }
 
@@ -33,32 +29,24 @@ class Service {
   }
 
   async getById(id) {
-    const query = `SELECT * FROM entries WHERE id = ${id}`;
-    const res = await this.pool.query(query);
-    const entry = res.rows;
-    if (entry === undefined) {
+    const entry = await models.Entry.findByPk(id);
+
+    if (!entry) {
       throw boom.notFound('Entry not found');
     }
     return entry;
   }
 
   async update(id, changes) {
-    const index = this.entries.findIndex((entry) => entry.id === id);
-    if (index === -1) {
-      throw boom.notFound('Entry not found');
-    }
-    const entry = this.entries[index];
-    this.entries[index] = { ...entry, ...changes };
-    return { message: 'Updated', ...index };
+    const entry = await this.getById(id);
+    const res = await entry.update(changes);
+    return res;
   }
 
   async delete(id) {
-    const index = this.entries.findIndex((entry) => entry.id === id);
-    if (index === -1) {
-      throw boom.notFound('Entry not found');
-    }
-    this.entries.splice(index, 1);
-    return { message: 'Deleted', id };
+    const entry = await this.getById(id);
+    await entry.destroy();
+    return { 'deleted entry': id };
   }
 }
 
