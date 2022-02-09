@@ -22,8 +22,12 @@ const updateEntry = joi.object({
   intensity: intensity,
 });
 
+const getEntriesByCategory = joi.object({
+  category: category,
+});
+
 const getEntry = joi.object({
   id: id.required(),
 });
 
-module.exports = { createEntry, updateEntry, getEntry };
+module.exports = { createEntry, updateEntry, getEntry, getEntriesByCategory };

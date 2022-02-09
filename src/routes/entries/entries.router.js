@@ -3,20 +3,29 @@ const express = require('express');
 const validate = require('../../middlewares/validate');
 
 const Service = require('./entries.service');
-const { createEntry, updateEntry, getEntry } = require('./entries.dto');
+const {
+  createEntry,
+  updateEntry,
+  getEntry,
+  getEntriesByCategory,
+} = require('./entries.dto');
 
 const router = express.Router();
 const service = new Service();
 
-router.get('/', async (req, res, next) => {
-  try {
-    const { category } = req.query;
-    const entries = await service.getAll(category);
-    res.status(200).json(entries);
-  } catch (error) {
-    next(error);
+router.get(
+  '/',
+  validate(getEntriesByCategory, 'query'),
+  async (req, res, next) => {
+    try {
+      const { category } = req.query;
+      const entries = await service.getAll(category);
+      res.status(200).json(entries);
+    } catch (error) {
+      next(error);
+    }
   }
-});
+);
 
 router.get('/:id', validate(getEntry, 'params'), async (req, res, next) => {
   try {
@@ -28,9 +37,13 @@ router.get('/:id', validate(getEntry, 'params'), async (req, res, next) => {
   }
 });
 
-router.post('/', validate(createEntry, 'body'), async (req, res) => {
-  const entry = await service.create(req.body);
-  res.status(201).json(entry);
+router.post('/', validate(createEntry, 'body'), async (req, res, next) => {
+  try {
+    const entry = await service.create(req.body);
+    res.status(201).json(entry);
+  } catch (error) {
+    next(error);
+  }
 });
 
 router.patch(
